@@ -21,3 +21,4 @@ android:
 
 script:
   - ./gradlew build
+  - cat /home/travis/build/newfivefour/TravisCITest/app/build/outputs/lint-results-debug.xml
