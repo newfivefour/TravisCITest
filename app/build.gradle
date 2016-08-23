@@ -9,7 +9,7 @@ repositories {
 // time the CI environment is recreated, for when we release to HockeyApp
 def ciKeystorePropertiesFile = rootProject.file("ci-keystore.properties")
 def ciKeystoreProperties = new Properties()
-ciKeystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+ciKeystoreProperties.load(new FileInputStream(ciKeystorePropertiesFile))
 
 android {
     compileSdkVersion 24
