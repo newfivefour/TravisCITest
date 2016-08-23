@@ -7,9 +7,9 @@ repositories {
 // We need this to sign the debug version, since we need a constant debug signing
 // config for when we deploy on the CI environment, not one that's recreated each
 // time the CI environment is recreated, for when we release to HockeyApp
-def keystorePropertiesFile = rootProject.file("ci-keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+def ciKeystorePropertiesFile = rootProject.file("ci-keystore.properties")
+def ciKeystoreProperties = new Properties()
+ciKeystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion 24
@@ -20,10 +20,10 @@ android {
       // config for when we deploy on the CI environment, not one that's recreated each
       // time the CI environment is recreated, for when we release to  HockeyApp
       ci {
-        keyAlias keystoreProperties['keyAlias']
-        keyPassword keystoreProperties['keyPassword']
-        storeFile file(keystoreProperties['storeFile'])
-        storePassword keystoreProperties['storePassword']
+        keyAlias ciKeystoreProperties['keyAlias']
+        keyPassword ciKeystoreProperties['keyPassword']
+        storeFile file(ciKeystoreProperties['storeFile'])
+        storePassword ciKeystoreProperties['storePassword']
       }
     }
 
