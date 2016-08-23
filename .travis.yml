@@ -20,7 +20,6 @@ android:
     - addon-google_apis-google-19
 
 script:
-  - echo $THING
   - ./gradlew build
   - cat /home/travis/build/newfivefour/TravisCITest/app/build/outputs/lint-results-debug.xml
   - >
