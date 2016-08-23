@@ -4,14 +4,31 @@ repositories {
   jcenter()
 }
 
+// We need this to sign the debug version, since we need a constant debug signing
+// config for when we deploy on the CI environment, not one that's recreated each
+// time the CI environment is recreated, for when we release to HockeyApp
+def keystorePropertiesFile = rootProject.file("ci-keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
-    android {
-        lintOptions {
-            abortOnError false
-        }
+    signingConfigs {
+      // We need this to sign the debug version, since we need a constant debug signing
+      // config for when we deploy on the CI environment, not one that's recreated each
+      // time the CI environment is recreated, for when we release to  HockeyApp
+      ci {
+        keyAlias keystoreProperties['keyAlias']
+        keyPassword keystoreProperties['keyPassword']
+        storeFile file(keystoreProperties['storeFile'])
+        storePassword keystoreProperties['storePassword']
+      }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     defaultConfig {
@@ -22,7 +39,15 @@ android {
         versionCode 3
         versionName "1.0"
     }
+
     buildTypes {
+        debug {
+            // We need this to sign the debug version, since we need a constant debug signing
+            // config for when we deploy via the CI environment, not one that's recreated each
+            // time the CI environment is recreated, for when we release to HockeyApp
+            signingConfig signingConfigs.ci
+            minifyEnabled false
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
