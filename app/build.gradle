@@ -4,26 +4,19 @@ repositories {
   jcenter()
 }
 
-// We need this to sign the debug version, since we need a constant debug signing
-// config for when we deploy on the CI environment, not one that's recreated each
-// time the CI environment is recreated, for when we release to HockeyApp
-def ciKeystorePropertiesFile = rootProject.file("ci-keystore.properties")
-def ciKeystoreProperties = new Properties()
-ciKeystoreProperties.load(new FileInputStream(ciKeystorePropertiesFile))
-
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
     signingConfigs {
-      // We need this to sign the debug version, since we need a constant debug signing
-      // config for when we deploy on the CI environment, not one that's recreated each
-      // time the CI environment is recreated, for when we release to  HockeyApp
+      // A keystore for the CI environment. Because the debug.keystore will change on each new
+      // version of creation of the CI environment, and that makes updates via continuous 
+      // deployment impossible.
       ci {
-        keyAlias ciKeystoreProperties['keyAlias']
-        keyPassword ciKeystoreProperties['keyPassword']
-        storeFile file(ciKeystoreProperties['storeFile'])
-        storePassword ciKeystoreProperties['storePassword']
+        keyAlias "alias_name"
+        keyPassword System.getenv("CI_KEY_PASSWORD")
+        storeFile file("my-ci-key.keystore")
+        storePassword System.getenv("CI_KEY_PASSWORD")
       }
     }
 
@@ -41,11 +34,11 @@ android {
     }
 
     buildTypes {
-        debug {
-            // We need this to sign the debug version, since we need a constant debug signing
-            // config for when we deploy via the CI environment, not one that's recreated each
-            // time the CI environment is recreated, for when we release to HockeyApp
-            signingConfig signingConfigs.ci
+        // A variant for the CI environment. Because the debug.keystore will change on each new
+        // version of creation of the CI environment, and that makes updates via continuous 
+        // deployment impossible.
+        with_ci_keystore {
+            if(System.getenv("CI_KEY_PASSWORD")) signingConfig signingConfigs.ci // Only if we have the keystore password
             minifyEnabled false
         }
         release {
