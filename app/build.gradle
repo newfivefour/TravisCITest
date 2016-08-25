@@ -13,9 +13,9 @@ android {
       // version of creation of the CI environment, and that makes updates via continuous 
       // deployment impossible.
       ci {
-        keyAlias "alias_name"
+        keyAlias "ci-key-alias"
         keyPassword System.getenv("CI_KEYSTORE_PASSWORD")
-        storeFile file("my-ci-key.keystore")
+        storeFile file("ci-key.keystore")
         storePassword System.getenv("CI_KEYSTORE_PASSWORD")
       }
     }
@@ -29,7 +29,8 @@ android {
         applicationId "com.newfivefour.traviscitest"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 4
+        // If we're not using Travis-CI, let the build version be 999
+        versionCode System.getenv("TRAVIS_BUILD_NUMBER") as Integer ?: 999
         versionName "1.0"
     }
 
