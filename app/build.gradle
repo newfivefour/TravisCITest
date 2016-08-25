@@ -14,9 +14,9 @@ android {
       // deployment impossible.
       ci {
         keyAlias "alias_name"
-        keyPassword System.getenv("CI_KEY_PASSWORD")
+        keyPassword System.getenv("CI_KEYSTORE_PASSWORD")
         storeFile file("my-ci-key.keystore")
-        storePassword System.getenv("CI_KEY_PASSWORD")
+        storePassword System.getenv("CI_KEYSTORE_PASSWORD")
       }
     }
 
@@ -37,9 +37,9 @@ android {
         // A variant for the CI environment. Because the debug.keystore will change on each new
         // version of creation of the CI environment, and that makes updates via continuous 
         // deployment impossible.
-        with_ci_keystore {
-            if(System.getenv("CI_KEY_PASSWORD")) signingConfig signingConfigs.ci // Only if we have the keystore password
-            minifyEnabled false
+        debug_with_ci_keystore.initWith(buildTypes.debug)
+        debug_with_ci_keystore {
+            if(System.getenv("CI_KEYSTORE_PASSWORD")) signingConfig signingConfigs.ci // Only if we have the keystore password
         }
         release {
             minifyEnabled false
