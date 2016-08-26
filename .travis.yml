@@ -22,12 +22,12 @@ android:
 script:
   - ./gradlew build
   - cat /home/travis/build/newfivefour/TravisCITest/app/build/outputs/lint-results-debug.xml
-  - export RELEASE_NOTES=`bash release_notes_for_hockeyapp.sh`
+  - bash release_notes_for_hockeyapp.sh > release_notes
   - >
     curl
     -F "status=2"
     -F "notify=1"
-    -F "notes=$RELEASE_NOTES"
+    -F "notes=<release_notes"
     -F "notes_type=0"
     -F "ipa=@app/build/outputs/apk/app-debug_with_ci_keystore.apk"
     -H "X-HockeyAppToken: $HOCKEYAPP_TOKEN"
