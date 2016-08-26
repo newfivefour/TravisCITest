@@ -14,7 +14,7 @@ head -n 1 | \
 # Find the commit information at the bottom of the notes
 sed -n 's/.*(commit:\([^)]*\)).*/\1/p' | \
 # Let's find all the logs since that commit
-xargs -I '{}' git log a537ee49af0566fccb1dc5d496164751511874c2..HEAD --pretty=format:'%s' --no-merges | \
+xargs -I '{}' git log {}..HEAD --pretty=format:'%s' --no-merges | \
 # Turn this newlines into <br>s since we need to pass this all as one line
 sed ':a;N;$!ba;s/\n/\n* /g'
 # The end of the revision log must have the latest commit
