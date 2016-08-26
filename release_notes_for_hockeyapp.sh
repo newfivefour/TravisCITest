@@ -11,6 +11,8 @@ grep notes | \
 head -n 1 | \
 # Find the commit information at the bottom of the notes
 sed -n 's/.*(commit:\([^)]*\)).*/\1/p' | \
+# We need an initial bullet point for our list of commit logs
+echo -n "* "
 # Let's find all the logs since that commit
 xargs -I '{}' git log {}..HEAD --pretty=format:'%s' --no-merges | \
 # Turn this newlines into <br>s since we need to pass this all as one line
